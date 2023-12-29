@@ -43,6 +43,7 @@ jobs:
           # Add SSH key to known hosts
           mkdir -p ~/.ssh
           echo $SSH_KEY > ~/.ssh/ec2-keypair.pem
+          cat ~/.ssh/ec2-keypair.pem
           chmod 600 ~/.ssh/ec2-keypair.pem
           ssh-keyscan -H $INSTANCE_IP >> ~/.ssh/known_hosts
           # Connect to EC2 instance and deploy
