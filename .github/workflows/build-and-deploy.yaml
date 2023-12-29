@@ -37,20 +37,17 @@ jobs:
         env:
           INSTANCE_IP: ${{ secrets.INSTANCE_IP }}  # Store your EC2 instance IP as a secret
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  # Store your private key as a secret
-          before_script: |
-            - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client wget gnupg -y )'
-            - wget -qO- https://get.docker.com/gpg | apt-key add -
-            - eval $(ssh-agent -s)
-            - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
-            - mkdir -p ~/.ssh
-            - touch ~/.ssh/config
-            - touch ~/.ssh/known_hosts
-            - chmod -R 400 ~/.ssh
-            - ssh-keyscan ip >> ~/.ssh/known_hosts
-            - '[[ -f /.dockerinit ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
         run: |
-          ssh -o StrictHostKeyChecking=no ubuntu@${INSTANCE_IP} << 'EOF'
+          # Install SSH if needed
+          sudo apt-get install -y openssh-client
+          # Add SSH key to known hosts
+          mkdir -p ~/.ssh
+          echo $SSH_KEY > ~/.ssh/ec2-keypair.pem
+          chmod 600 ~/.ssh/ec2-keypair.pem
+          ssh-keyscan -H $INSTANCE_IP >> ~/.ssh/known_hosts
+          # Connect to EC2 instance and deploy
+          ssh -v -i ~/.ssh/ec2-keypair.pem ubuntu@$INSTANCE_IP << EOF
+          # Your deployment commands here, e.g.,
           docker pull faizanazim11/sa-proto1:latest
-          cd /home/ubuntu
           docker-compose up -d
           EOF
