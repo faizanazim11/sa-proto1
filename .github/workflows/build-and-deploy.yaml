@@ -38,17 +38,8 @@ jobs:
           INSTANCE_IP: ${{ secrets.INSTANCE_IP }}  # Store your EC2 instance IP as a secret
           SSH_KEY: ${{ secrets.SSH_PRIVATE_KEY }}  # Store your private key as a secret
         run: |
-          # Install SSH if needed
-          sudo apt-get install -y openssh-client
-          # Add SSH key to known hosts
-          mkdir -p ~/.ssh
-          echo $SSH_KEY > ~/.ssh/ec2-keypair.pem
-          cat ~/.ssh/ec2-keypair.pem
-          chmod 600 ~/.ssh/ec2-keypair.pem
-          ssh-keyscan -H $INSTANCE_IP >> ~/.ssh/known_hosts
-          # Connect to EC2 instance and deploy
-          ssh -v -i ~/.ssh/ec2-keypair.pem ubuntu@$INSTANCE_IP << EOF
-          # Your deployment commands here, e.g.,
+          echo $SSH_KEY > private_key && chmod 600 private_key
+          ssh -o StrictHostKeyChecking=no -i private_key ubuntu@${INSTANCE_IP}
           docker pull faizanazim11/sa-proto1:latest
           docker-compose up -d
           EOF
