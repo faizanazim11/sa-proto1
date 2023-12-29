@@ -26,7 +26,11 @@ class _SecurityManager:
         user = UsersCollection().get_user(username)
         if user and user["password"] == password:
             return self.jwt.encode({"username": username, "name": user["name"]})
-        return ""
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid username or password",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
 
     def __call__(self, request: Request) -> _UserDetails:
         """
