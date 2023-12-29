@@ -42,11 +42,11 @@ jobs:
           sudo apt-get install -y openssh-client
           # Add SSH key to known hosts
           mkdir -p ~/.ssh
-          echo "$SSH_KEY" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "$SSH_KEY" > ~/.ssh/ec2-keypair.pem
+          chmod 600 ~/.ssh/ec2-keypair.pem
           ssh-keyscan -H $INSTANCE_IP >> ~/.ssh/known_hosts
           # Connect to EC2 instance and deploy
-          ssh -o StrictHostKeyChecking=no ubuntu@$INSTANCE_IP << EOF
+          ssh -v -i ~/.ssh/ec2-keypair.pem ubuntu@$INSTANCE_IP << EOF
           # Your deployment commands here, e.g.,
           docker pull faizanazim11/sa-proto1:latest
           docker-compose up -d
