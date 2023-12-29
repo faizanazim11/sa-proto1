@@ -228,5 +228,5 @@ logs
 
 *.stats
 .ruff_cache
-docker*
+docker-compose*
 nginx*
