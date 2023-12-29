@@ -49,6 +49,7 @@ jobs:
             - ssh-keyscan ip >> ~/.ssh/known_hosts
             - '[[ -f /.dockerinit ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
         run: |
+          ssh -o StrictHostKeyChecking=no ubuntu@${INSTANCE_IP} << 'EOF'
           docker pull faizanazim11/sa-proto1:latest
           cd /home/ubuntu
           docker-compose up -d
