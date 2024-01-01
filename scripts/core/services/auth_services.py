@@ -11,6 +11,12 @@ def login_user(login_model: LoginModel, response: Response):
     jwt_token = SecurityManager.login(login_model.username, login_model.password)
     response.set_cookie(key="access_token", value=f"Bearer {jwt_token}", httponly=True, secure=True, samesite='none', domain='be.faizanazim11.codes')
     response.headers["access_token"] = f"Bearer {jwt_token}"
+    response.headers["Access-Control-Allow-Origin"] = "http://localhost:5173"
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.headers["Access-Control-Allow-Headers"] = "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
+    response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
+    response.headers["Access-Control-Expose-Headers"] = "access_token"
+    response.headers["Access-Control-Max-Age"] = "3600"
     return {"message": "Login successful"}
 
 
