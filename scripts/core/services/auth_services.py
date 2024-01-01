@@ -9,8 +9,7 @@ auth_services = APIRouter()
 @auth_services.post("/login")
 def login_user(login_model: LoginModel, response: Response):
     jwt_token = SecurityManager.login(login_model.username, login_model.password)
-    response.set_cookie(key="Authentication", value=f"Bearer {jwt_token}", httponly=True)
-    response.headers["Authorization"] = f"Bearer {jwt_token}"
+    response.set_cookie(key="Authentication", value=f"Bearer {jwt_token}", httponly=False)
     return {"message": "Login successful"}
 
 
