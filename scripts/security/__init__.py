@@ -39,7 +39,7 @@ class _SecurityManager:
         :return:
         """
         try:
-            token = request.headers.get("proto-token", request.cookies.get("Authentication", ""))
+            token = request.headers.get("access_token", request.cookies.get("access_token", ""))
             token = token.split(" ")[1]
             if self.jwt.verify(token):
                 return _UserDetails(**self.jwt.get_payload(token))

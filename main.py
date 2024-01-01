@@ -17,6 +17,6 @@ class FastAPIConfig(BaseModel):
 
 app = FastAPI(**FastAPIConfig().model_dump())
 app.add_middleware(
-    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"], allow_credentials=True, allow_origin_regex=".*"
+    CORSMiddleware, allow_origins=["http://localhost:5173", "be.faizanazim11.codes"], allow_methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"], allow_headers=["Access-Control-Allow-Headers", 'Content-Type', 'Authorization', 'Access-Control-Allow-Origin'], allow_credentials=True
 )
 app.include_router(router)
