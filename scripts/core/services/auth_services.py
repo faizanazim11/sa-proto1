@@ -17,6 +17,7 @@ def login_user(login_model: LoginModel, response: Response):
     response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
     response.headers["Access-Control-Expose-Headers"] = "access_token"
     response.headers["Access-Control-Max-Age"] = "3600"
+    response.headers["Access-Control-Allow-Cookies"] = "true"
     return {"message": "Login successful"}
 
 
