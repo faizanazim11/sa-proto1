@@ -22,4 +22,4 @@ def login_user(login_model: LoginModel, response: Response):
 
 @auth_services.get("/user")
 def get_user(user_details: UserDetails):
-    return user_details.name
+    return {"name": user_details.name}
