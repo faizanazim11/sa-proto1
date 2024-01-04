@@ -43,4 +43,3 @@ jobs:
           docker pull faizanazim11/sa-proto1:latest
           docker-compose up -d
           EOF
-          EOF
