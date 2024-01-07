@@ -13,10 +13,18 @@ class FastAPIConfig(BaseModel):
     title: str = "SKA Essentials API"
     description: str = "API for SKA Essentials"
     version: str = "0.1.0"
+    root_path: str = "/proto1"
+    docs_url: str = "/docs"
+    redoc_url: str = "/redoc"
+    openapi_url: str = "/openapi.json"
 
 
 app = FastAPI(**FastAPIConfig().model_dump())
 app.add_middleware(
-    CORSMiddleware, allow_origins=["http://localhost:5173", "be.faizanazim11.codes"], allow_methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"], allow_headers=["Access-Control-Allow-Headers", 'Content-Type', 'Authorization', 'Access-Control-Allow-Origin'], allow_credentials=True
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "be.faizanazim11.codes"],
+    allow_methods=["GET", "POST", "PUT", "DELETE", "HEAD", "OPTIONS"],
+    allow_headers=["Access-Control-Allow-Headers", "Content-Type", "Authorization", "Access-Control-Allow-Origin"],
+    allow_credentials=True,
 )
 app.include_router(router)

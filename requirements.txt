@@ -1,5 +1,9 @@
 fastapi~=0.108.0
+pandas~=2.1.4
+psycopg[binary]~=3.1.16
 pydantic-settings~=2.1.0
 pyjwt~=2.8.0
 pymongo~=4.6.1
+sqlalchemy~=2.0.25
+sqlalchemy-utils~=0.41.1
 uvicorn[standard]~=0.25.0

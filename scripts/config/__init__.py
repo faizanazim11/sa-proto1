@@ -48,6 +48,7 @@ class _PathToStorage(BaseSettings):
 
 class _Databases(BaseSettings):
     MONGO_URI: str
+    POSTGRES_URI: str
 
 
 Services = _Services()
