@@ -1,6 +1,7 @@
 from fastapi import APIRouter
-from sqlmodel import Session, select
 from sqlalchemy import any_
+from sqlmodel import Session, select
+
 from scripts.core.schemas.pg_models import OrganizationDetails, OrganizationListingFilters, engine
 from scripts.security import UserDetails
 
