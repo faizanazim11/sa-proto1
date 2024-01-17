@@ -54,5 +54,6 @@ jobs:
           mkdir -p ~/.ssh && echo -e "${SSH_KEY//_/\\n}" > ~/.ssh/id_rsa && chmod og-rwx ~/.ssh/id_rsa
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${INSTANCE_IP} << EOF
           docker pull faizanazim11/sa-proto1:latest
+          cd sa-proto1
           docker-compose up -d
           EOF
