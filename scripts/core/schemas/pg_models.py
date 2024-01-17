@@ -1,8 +1,8 @@
-from typing import Optional
+from typing import List, Optional
 
 from pydantic import field_validator
 from sqlalchemy import create_engine
-from sqlmodel import Field, SQLModel
+from sqlmodel import ARRAY, Column, Field, SQLModel, String
 
 from scripts.config import Databases
 
@@ -10,20 +10,27 @@ from scripts.config import Databases
 class OrganizationDetails(SQLModel, table=True):
     __tablename__ = "organization_details"
     id: Optional[int] = Field(default=None, primary_key=True)
-    name: str = Field(index=True)
-    location: str
     pincode: int = Field(index=True)
-    sector: str = Field(index=True)
+    registered_year: Optional[int] = None
+    name: str = Field(index=True)
+    city: str = Field(index=True)
+    state: str = Field(index=True)
+    sector: List[str] = Field(sa_column=Column(ARRAY(String, dimensions=1), default=[]))
+    employee_count: Optional[str] = None
+    logo: Optional[str] = None
+    contact_email: Optional[str] = None
+    address: Optional[str] = None
     profile: Optional[str] = None
 
 
 class OrganizationListingFilters(SQLModel):
     name: Optional[str] = None
-    location: Optional[list[str]] = None
+    city: Optional[list[str]] = None
+    state: Optional[list[str]] = None
     pincode: Optional[list[int]] = None
     sector: Optional[list[str]] = None
 
-    @field_validator("location", "sector", mode="before")
+    @field_validator("city", "state", "sector", mode="before")
     @classmethod
     def lower_values(cls, values):
         if values:
