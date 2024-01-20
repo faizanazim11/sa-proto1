@@ -230,3 +230,4 @@ logs
 .ruff_cache
 docker-compose*
 nginx*
+*.ipynb
