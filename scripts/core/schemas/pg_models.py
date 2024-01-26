@@ -44,7 +44,23 @@ class JobDetails(SQLModel, table=True):
     description: str
     qualification: str
     salary: Optional[str] = Field(default=None, index=True)
-    posted_by: Optional[int] = Field(default=None, foreign_key="organization_details.id", index=True)
+    posted_by: int = Field(foreign_key="organization_details.id", index=True)
+
+
+class JobListingFilters(SQLModel):
+    title: Optional[str] = None
+    posted_by: Optional[List[int]] = None
+    sector: Optional[List[str]] = None
+    city: Optional[List[str]] = None
+    state: Optional[List[str]] = None
+    pincode: Optional[List[int]] = None
+
+    @field_validator("city", "state", "sector", mode="before")
+    @classmethod
+    def lower_values(cls, values):
+        if values:
+            values = [f"%{value.lower()}%" for value in values]
+        return values
 
 
 engine = create_engine(Databases.POSTGRES_URI, echo=False)
