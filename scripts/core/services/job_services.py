@@ -25,7 +25,7 @@ def create_job(_: UserDetails, job: JobDetails):
         return job
 
 
-@job_services.get("/")
+@job_services.post("/")
 def get_job(_: UserDetails, filters: JobListingFilters = None):
     query = select(JobDetails.__table__.columns, OrganizationDetails.name).join(OrganizationDetails)
     count_query = None
@@ -81,7 +81,7 @@ def update_job(_: UserDetails, id: int, job: JobDetails):
         return job_obj
 
 
-@job_services.get("/search/")
+@job_services.post("/search/")
 def search_job(_: UserDetails, search: JobSearchFilters):
     return get_job(
         JobListingFilters(**get_filter_json(search.query, search.location), page=search.page, limit=search.limit)
