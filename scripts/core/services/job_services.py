@@ -11,12 +11,13 @@ from scripts.core.schemas.pg_models import (
     OrganizationDetails,
     engine,
 )
+from scripts.security import UserDetails
 
 job_services = APIRouter()
 
 
 @job_services.post("/")
-def create_job(job: JobDetails):
+def create_job(_: UserDetails, job: JobDetails):
     with Session(engine) as session:
         session.add(job)
         session.commit()
@@ -25,7 +26,7 @@ def create_job(job: JobDetails):
 
 
 @job_services.get("/")
-def get_job(filters: JobListingFilters = None):
+def get_job(_: UserDetails, filters: JobListingFilters = None):
     query = select(JobDetails.__table__.columns, OrganizationDetails.name).join(OrganizationDetails)
     count_query = None
     where_conditions = []
@@ -65,13 +66,13 @@ def get_job(filters: JobListingFilters = None):
 
 
 @job_services.get("/{id}")
-def get_job_by_id(id: int):
+def get_job_by_id(_: UserDetails, id: int):
     with Session(engine) as session:
         return session.get(JobDetails, id)
 
 
 @job_services.put("/{id}")
-def update_job(id: int, job: JobDetails):
+def update_job(_: UserDetails, id: int, job: JobDetails):
     with Session(engine) as session:
         job_obj = session.get(JobDetails, id)
         [setattr(job_obj, key, value) for key, value in job.model_dump(exclude_unset=True).items()]
@@ -81,7 +82,7 @@ def update_job(id: int, job: JobDetails):
 
 
 @job_services.get("/search/")
-def search_job(search: JobSearchFilters):
+def search_job(_: UserDetails, search: JobSearchFilters):
     return get_job(
         JobListingFilters(**get_filter_json(search.query, search.location), page=search.page, limit=search.limit)
     )
