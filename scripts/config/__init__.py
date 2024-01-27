@@ -12,6 +12,7 @@ class _Services(BaseSettings):
     # Microservice Specifics
     PORT: int = Field(default=3001, validation_alias="service_port")
     HOST: str = Field(default="0.0.0.0", validation_alias="service_host")
+    ENABLE_SSL: bool = Field(default=True, validation_alias="enable_ssl")
 
     # Logging
     LOG_LEVEL: str = "INFO"
