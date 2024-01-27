@@ -49,11 +49,18 @@ class _PathToStorage(BaseSettings):
 class _Databases(BaseSettings):
     MONGO_URI: str
     POSTGRES_URI: str
+    REDIS_URI: str
+
+
+class _AIConfig(BaseSettings):
+    PROJECT: str
+    REGION: str
 
 
 Services = _Services()
 SecurityConstants = _SecurityConstants()
 Databases = _Databases()
 PathToStorage = _PathToStorage()
+AIConfig = _AIConfig()
 
-__all__ = ["Services", "SecurityConstants", "Databases", "PathToStorage"]
+__all__ = ["Services", "SecurityConstants", "Databases", "PathToStorage", "AIConfig"]

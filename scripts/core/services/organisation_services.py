@@ -1,8 +1,9 @@
 from fastapi import APIRouter
+from fastapi.encoders import jsonable_encoder
 from sqlalchemy import any_, exists, func
 from sqlmodel import Session, select
 
-from scripts.core.schemas.pg_models import OrganizationDetails, OrganizationListingFilters, engine
+from scripts.core.schemas.pg_models import ListingResponse, OrganizationDetails, OrganizationListingFilters, engine
 from scripts.security import UserDetails
 
 organisation_services = APIRouter()
@@ -20,20 +21,32 @@ def create_organisation(organisation: OrganizationDetails, _: UserDetails):
 @organisation_services.get("/")
 def get_organisation(_: UserDetails, filters: OrganizationListingFilters = None):
     query = select(OrganizationDetails)
+    count_query = None
+    where_conditions = []
     if filters:
         if filters.name:
-            query = query.where(OrganizationDetails.name.ilike(f"%{filters.name.lower()}%"))
+            where_conditions.append(OrganizationDetails.name.ilike(f"%{filters.name.lower()}%"))
         if filters.city:
-            query = query.where(OrganizationDetails.city.ilike(any_(filters.city)))
+            where_conditions.append(OrganizationDetails.city.ilike(any_(filters.city)))
         if filters.state:
-            query = query.where(OrganizationDetails.state.ilike(any_(filters.state)))
+            where_conditions.append(OrganizationDetails.state.ilike(any_(filters.state)))
         if filters.pincode:
-            query = query.where(OrganizationDetails.pincode.in_(filters.pincode))
+            where_conditions.append(OrganizationDetails.pincode.in_(filters.pincode))
         if filters.sector:
             column_valued = func.unnest(OrganizationDetails.sector).column_valued()
-            query = query.where(exists(select(column_valued).where(column_valued.ilike(any_(filters.sector)))))
+            where_conditions.append(exists(select(column_valued).where(column_valued.ilike(any_(filters.sector)))))
+        query = query.where(*where_conditions)
+        if filters.limit:
+            count_query = select(func.count()).select_from(OrganizationDetails).order_by(None).where(*where_conditions)
+            query = query.offset((filters.page - 1) * filters.limit).limit(filters.limit)
     with Session(engine) as session:
-        return session.exec(query).all()
+        count = session.exec(count_query).first() if count_query is not None else None
+        results = jsonable_encoder(session.exec(query).all())
+        return ListingResponse(
+            data=results,
+            total_records=count,
+            end_of_records=(count <= (filters.page * filters.limit) if count else True),
+        )
 
 
 @organisation_services.get("/{id}")

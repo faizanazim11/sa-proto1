@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import field_validator
+from pydantic import BaseModel, field_validator
 from sqlalchemy import create_engine
 from sqlmodel import ARRAY, Column, Field, SQLModel, String
 
@@ -29,6 +29,8 @@ class OrganizationListingFilters(SQLModel):
     state: Optional[list[str]] = None
     pincode: Optional[list[int]] = None
     sector: Optional[list[str]] = None
+    page: Optional[int] = 1
+    limit: Optional[int] = None
 
     @field_validator("city", "state", "sector", mode="before")
     @classmethod
@@ -54,6 +56,8 @@ class JobListingFilters(SQLModel):
     city: Optional[List[str]] = None
     state: Optional[List[str]] = None
     pincode: Optional[List[int]] = None
+    page: Optional[int] = 1
+    limit: Optional[int] = None
 
     @field_validator("city", "state", "sector", mode="before")
     @classmethod
@@ -61,6 +65,19 @@ class JobListingFilters(SQLModel):
         if values:
             values = [f"%{value.lower()}%" for value in values]
         return values
+
+
+class JobSearchFilters(BaseModel):
+    query: str
+    location: Optional[str] = None
+    page: Optional[int] = 1
+    limit: Optional[int] = None
+
+
+class ListingResponse(BaseModel):
+    data: Optional[list[dict]] = None
+    end_of_records: Optional[bool] = False
+    total_records: Optional[int] = None
 
 
 engine = create_engine(Databases.POSTGRES_URI, echo=False)
