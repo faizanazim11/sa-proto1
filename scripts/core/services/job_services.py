@@ -84,5 +84,6 @@ def update_job(_: UserDetails, id: int, job: JobDetails):
 @job_services.post("/search/")
 def search_job(_: UserDetails, search: JobSearchFilters):
     return get_job(
-        JobListingFilters(**get_filter_json(search.query, search.location), page=search.page, limit=search.limit)
+        _=_,
+        filters=JobListingFilters(**get_filter_json(search.query, search.location), page=search.page, limit=search.limit)
     )
