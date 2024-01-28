@@ -25,7 +25,7 @@ def create_job(_: UserDetails, job: JobDetails):
         return job
 
 
-@job_services.post("/")
+@job_services.post("/list")
 def get_job(_: UserDetails, filters: JobListingFilters = None):
     query = select(JobDetails.__table__.columns, OrganizationDetails.name).join(OrganizationDetails)
     count_query = None

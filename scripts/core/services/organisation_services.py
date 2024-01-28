@@ -18,7 +18,7 @@ def create_organisation(organisation: OrganizationDetails, _: UserDetails):
         return organisation
 
 
-@organisation_services.post("/")
+@organisation_services.post("/list")
 def get_organisation(_: UserDetails, filters: OrganizationListingFilters = None):
     query = select(OrganizationDetails)
     count_query = None
