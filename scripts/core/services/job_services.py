@@ -27,7 +27,7 @@ def create_job(_: UserDetails, job: JobDetails):
 
 @job_services.post("/list")
 def get_job(_: UserDetails, filters: JobListingFilters = None):
-    query = select(JobDetails.__table__.columns, OrganizationDetails.name).join(OrganizationDetails)
+    query = select(JobDetails.__table__.columns, OrganizationDetails.__table__.columns).join(OrganizationDetails)
     count_query = None
     where_conditions = []
     if filters:
