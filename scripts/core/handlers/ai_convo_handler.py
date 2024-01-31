@@ -37,6 +37,8 @@ def get_filter_json(query: str, location: str = None) -> dict:
 
     If User Location is provided but the context has some other location within India, provide the location context in output.
 
+    Emphasis more on title and sector.
+
     If any other context comes give empty json.
 
     input: Software Engineering jobs in Uttar Pradesh.
@@ -64,6 +66,15 @@ def get_filter_json(query: str, location: str = None) -> dict:
     output: {
     }
 
+    input: front-end jobs in India.
+    output: {
+    \"title\": \"front-end\"
+    }
+
+    input: "system jobs"
+    output: {
+        \"title\": \"system\"
+    }
     """
         + f"""input: {query}
 

@@ -1,3 +1,4 @@
+import re
 from typing import List, Optional
 
 from pydantic import BaseModel, field_validator
@@ -64,6 +65,13 @@ class JobListingFilters(SQLModel):
     def lower_values(cls, values):
         if values:
             values = [f"%{value.lower()}%" for value in values]
+        return values
+
+    @field_validator("title", mode="before")
+    @classmethod
+    def break_title(cls, values):
+        if values:
+            values = "%".join(re.split(r',|-', values))
         return values
 
 
